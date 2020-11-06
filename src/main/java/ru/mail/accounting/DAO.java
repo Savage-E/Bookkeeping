@@ -1,7 +1,5 @@
 package ru.mail.accounting;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public interface DAO<T> {
@@ -9,10 +7,10 @@ public interface DAO<T> {
 
     List<T> getAll();
 
-    void save (T entity);
+    void save(T entity);
 
-    void update (T entity);
+    void update(T entity);
 
-    void delete (T entity);
+    void delete(T entity);
 }
 

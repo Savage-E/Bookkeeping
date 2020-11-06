@@ -49,7 +49,7 @@ public final class NomenclatureDAO implements DAO<Nomenclature> {
             preparedStatement.setInt(3, entity.getInternalCode());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+           System.out.println(e.getMessage());
         }
     }
 
@@ -58,9 +58,9 @@ public final class NomenclatureDAO implements DAO<Nomenclature> {
     public void update(Nomenclature entity) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE nomenclature SET name = ?,internal_code = ? WHERE id = ?")) {
             int cnt = 1;
-            preparedStatement.setInt(cnt++, entity.getId());
             preparedStatement.setString(cnt++, entity.getName());
             preparedStatement.setInt(cnt++, entity.getInternalCode());
+            preparedStatement.setInt(cnt++, entity.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

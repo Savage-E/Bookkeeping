@@ -7,6 +7,12 @@ public final class Nomenclature {
     private @NotNull String name;
     private int internalCode;
 
+    public Nomenclature(int id, @NotNull String name, int internalCode) {
+        this.id = id;
+        this.name = name;
+        this.internalCode = internalCode;
+    }
+
     public int getId() {
         return id;
     }
@@ -29,12 +35,6 @@ public final class Nomenclature {
     }
 
     public void setInternalCode(int internalCode) {
-        this.internalCode = internalCode;
-    }
-
-    public Nomenclature(int id, @NotNull String name, int internalCode) {
-        this.id = id;
-        this.name = name;
         this.internalCode = internalCode;
     }
 }

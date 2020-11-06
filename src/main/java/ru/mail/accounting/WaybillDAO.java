@@ -1,7 +1,5 @@
 package ru.mail.accounting;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,11 +56,11 @@ public class WaybillDAO implements DAO<Waybill> {
 
     @Override
     public void update(Waybill entity) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE waybill SET  waybill_date= ?,org_sender= ?  WHERE wabill_num = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE waybill SET  waybill_date= ?,org_sender= ?  WHERE waybill_num = ?")) {
             int cnt = 1;
-            preparedStatement.setInt(cnt++, entity.getWaybillNum());
-            preparedStatement.setDate(cnt++,Date.valueOf(entity.getWaybillDate()));
+            preparedStatement.setDate(cnt++, Date.valueOf(entity.getWaybillDate()));
             preparedStatement.setString(cnt++, entity.getOrgSender());
+            preparedStatement.setInt(cnt++, entity.getWaybillNum());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

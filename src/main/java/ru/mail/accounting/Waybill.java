@@ -5,9 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 
 public final class Waybill {
-    private  int waybillNum;
+    private int waybillNum;
     private java.time.LocalDate waybillDate;
-    private @NotNull String OrgSender;
+    private @NotNull
+    String OrgSender;
 
     public Waybill(int waybillNum, LocalDate waybillDate, @NotNull String orgSender) {
         this.waybillNum = waybillNum;

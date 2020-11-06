@@ -1,7 +1,5 @@
 package ru.mail.accounting;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class WaybillPosition {
     private int position;
     private int price;
@@ -9,20 +7,20 @@ public final class WaybillPosition {
     private int amount;
     private int waybill;
 
+    public WaybillPosition(int position, int price, int nomenclature, int amount, int waybill) {
+        this.position = position;
+        this.price = price;
+        this.nomenclature = nomenclature;
+        this.amount = amount;
+        this.waybill = waybill;
+    }
+
     public int getWaybill() {
         return waybill;
     }
 
     public void setWaybill(int waybill) {
         this.waybill = waybill;
-    }
-
-    public WaybillPosition(int position, int price, int nomenclature, int amount, int waybill) {
-        this.position = position;
-        this.price = price;
-        this.nomenclature = nomenclature;
-        this.amount = amount;
-        this.waybill=waybill;
     }
 
     public int getPrice() {

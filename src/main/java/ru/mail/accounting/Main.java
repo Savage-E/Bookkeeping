@@ -3,7 +3,6 @@ package ru.mail.accounting;
 import org.flywaydb.core.Flyway;
 
 import java.sql.*;
-import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -44,8 +43,8 @@ public class Main {
                 stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  8,'2010-11-01','Nike')");
                 stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  9,'2010-12-01','Puma')");
                 stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  10,'2011-01-01','Billa')");
-                stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  11,'2010-02-01','Mail')");
-                stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  12,'2010-03-01','Yandex')");
+                stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  11,'2011-02-01','Mail')");
+                stmt.executeUpdate("INSERT INTO waybill(waybill_num,waybill_date,org_sender) VALUES(  12,'2011-03-01','Yandex')");
 
 
             }
@@ -54,15 +53,6 @@ public class Main {
                 stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(1,'Milk',2242) ");
                 stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(2,'Sneaker',24432) ");
                 stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(3,'Smart_Station',3224) ");
-               /* stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(5,'',53224) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(6,'',0786543) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(7,'',73252) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(8,'',843452) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(9,'',6324) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(10,'',52523) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(11,'',532269) ");
-                stmt.executeUpdate("INSERT INTO nomenclature(id,name,internal_code) VALUES(12,'',9765) ");*/
-
             }
             //Into WayBill_position.
             try (Statement stmt = connection.createStatement()) {
@@ -83,7 +73,6 @@ public class Main {
                 stmt.executeUpdate("INSERT INTO waybill_position(position ,price,nomenclature,amount,waybill) VALUES (12,490000,3,13100,11)");
             }
 
-//
 
             System.out.println("Report 1: Top 10 suppliers of the number of delivered goods ");
             try (Statement stmt = connection.createStatement()) {
@@ -92,7 +81,7 @@ public class Main {
                         "where w.waybill_num in\n" +
                         "(select  wp.waybill\n" +
                         "from  waybill_position wp \n" +
-                        "order by wp.amount DESC\n"+
+                        "order by wp.amount DESC\n" +
                         "limit 10);")) {
                     while (rs.next()) {
                         System.out.println(rs.getString("org_sender"));
@@ -112,19 +101,53 @@ public class Main {
                     }
                 }
             }
-            System.out.println("Report 3: ");
+            System.out.println("Report 3: quantity and amount of goods received in the specified period ");
             try (Statement stmt = connection.createStatement()) {
-                try (ResultSet rs = stmt.executeQuery("select w.org_sender \n" +
-                        "from waybill w  \n" +
-                        "where w.waybill_num in (select wp.waybill\n" +
-                        "from  waybill_position wp \n" +
-                        "where wp.amount >42000\n" +
-                        ");")) {
+                try (ResultSet rs = stmt.executeQuery("select sum(wp.amount)as total_amount,\n" +
+                        "\t\tsum(wp.price) as total_price\n" +
+                        "from waybill_position wp\n" +
+                        "where wp.waybill in(\n" +
+                        "select w.waybill_num\n" +
+                        "from waybill w\n" +
+                        "where w.waybill_date between '2010-04-01'\n" +
+                        "and '2010-07-01')\n")) {
                     while (rs.next()) {
+                        System.out.println(rs.getString("total_price"));
+                        System.out.println(rs.getString("total_amount"));
+                    }
+                }
+            }
+            System.out.println("Report 4: average price of goods for the received period ");
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery("select avg(wp.price) \n" +
+                        "from waybill_position wp\n" +
+                        "where wp.waybill in(\n" +
+                        "select w.waybill_num\n" +
+                        "from waybill w\n" +
+                        "where w.waybill_date between '2010-04-01'\n" +
+                        "and '2010-07-01')")) {
+                    while (rs.next()) {
+                        System.out.println(rs.getString("avg"));
+                    }
+                }
+            }
+            System.out.println("Report 5: list of goods supplied by organizations for the period ");
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery("select n.name, w.org_sender\n" +
+                        "from waybill w \n" +
+                        "join waybill_position wp on w.waybill_num=wp.waybill\n" +
+                        "join  nomenclature n on wp.nomenclature=n.id\n" +
+                        "where w.waybill_date between '2010-04-01'\n" +
+                        "and '2011-03-01' ;")) {
+                    while (rs.next()) {
+                        System.out.print(rs.getString("name") + " ");
                         System.out.println(rs.getString("org_sender"));
                     }
                 }
             }
+
+            OrganizationDAO organizationDAO = new OrganizationDAO(connection);
+            System.out.println(organizationDAO.get("Magnit").getName());
         } catch (SQLException throwables) {
             System.out.println("Connection failure.");
             throwables.printStackTrace();
