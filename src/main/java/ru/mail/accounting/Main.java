@@ -146,8 +146,7 @@ public class Main {
                 }
             }
 
-            OrganizationDAO organizationDAO = new OrganizationDAO(connection);
-            System.out.println(organizationDAO.get("Magnit").getName());
+
         } catch (SQLException throwables) {
             System.out.println("Connection failure.");
             throwables.printStackTrace();

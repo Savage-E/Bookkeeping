@@ -45,35 +45,16 @@ public class OrganisationDAOTest {
                     });
             //GetALL test.
             List<Organization> List = organisationDAO.getAll();
-            String actual1= List.get(0).getName();
-            String expected1 ="Adidas";
-            String expected2="Nike";
-            String actual2=List.get(1).getName();
-            assertEquals(expected1,actual1);
-            assertEquals(expected2,actual2);
+            String actual1 = List.get(0).getName();
+            String expected1 = "Adidas";
+            String expected2 = "Nike";
+            String actual2 = List.get(1).getName();
+            assertEquals(expected1, actual1);
+            assertEquals(expected2, actual2);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
-    
-    @Test
-    public void WaybillDAOTest() {
-        final Flyway flyway = Flyway.configure().dataSource("jdbc:postgresql://127.0.0.1:5432/database1", "postgres", "")
-                .locations("db")
-                .load();
-        flyway.clean();
-        flyway.migrate();
-    }
-
-    @Test
-    public void WaybillPosDAOTest() {
-        final Flyway flyway = Flyway.configure().dataSource("jdbc:postgresql://127.0.0.1:5432/database1", "postgres", "")
-                .locations("db")
-                .load();
-        flyway.clean();
-        flyway.migrate();
-    }
-
 
 }
